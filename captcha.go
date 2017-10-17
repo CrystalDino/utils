@@ -17,7 +17,7 @@ var (
 	CaptchaLang string = "en"
 )
 
-func InitCaptcha(width, height, defaultLen int, lang string) {
+func CaptchaInit(width, height, defaultLen int, lang string) {
 	if width > 0 {
 		CaptchaWidth = width
 	}
@@ -66,4 +66,8 @@ func GetCaptcha(name string) (ctt []byte, err error) {
 	}
 	ctt = content.Bytes()
 	return
+}
+
+func VerifyCaptcha(id, code string) bool {
+	return captcha.VerifyString(id, code)
 }
