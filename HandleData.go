@@ -18,7 +18,7 @@ func StringInArray(key string, array []string) bool {
 	return false
 }
 
-func StructToMap(data interface{}, lowerKey bool, except ...string) (m map[string]interface{}, err error) {
+func StructToMap(data interface{}, lowerKey, bExcept bool, fields ...string) (m map[string]interface{}, err error) {
 	m = make(map[string]interface{}, 0)
 	if data == nil {
 		err = errors.New("struct to map error data is nil")
@@ -35,8 +35,14 @@ func StructToMap(data interface{}, lowerKey bool, except ...string) (m map[strin
 	t := v.Type()
 	for i := 0; i < v.NumField(); i++ {
 		f := v.Field(i)
-		if StringInArray(t.Field(i).Name, except) {
-			continue
+		if bExcept {
+			if StringInArray(t.Field(i).Name, fields) {
+				continue
+			}
+		} else {
+			if !StringInArray(t.Field(i).Name, fields) {
+				continue
+			}
 		}
 		if lowerKey {
 			m[strings.ToLower(t.Field(i).Name)] = f.Interface()
